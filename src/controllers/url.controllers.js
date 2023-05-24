@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid'
-import { createShortUrlDB, getUrlByIdDB } from '../repositories/url.repository.js'
+import { createShortUrlDB, getUrlByIdDB, getUrlByNameDB, increaseViewsDB } from '../repositories/url.repository.js'
 const nanoid = customAlphabet('1234567890abcdef', 8)
 
 export async function shortenUrl(req, res) {
@@ -29,7 +29,17 @@ export async function getUrl(req, res) {
 }
 
 export async function openUrl(req, res) {
-    res.send("openUrl")
+    const { shortUrl } = req.params
+    try {
+        const url = await getUrlByNameDB(shortUrl)
+        if (url.rowCount === 0) return res.status(404).send({ message: "URL não existe!" })
+
+        await increaseViewsDB(shortUrl)
+
+        res.redirect(url.rows[0].url)
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
 }
 
 export async function deleteUrl(req, res) {
