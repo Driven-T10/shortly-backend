@@ -1,4 +1,4 @@
-import { getCompleteUserDB } from "../repositories/user.repository.js"
+import { getCompleteUserDB, getRankingDB } from "../repositories/user.repository.js"
 
 export async function getCurrentUser(req, res) {
     const { userId } = res.locals
@@ -13,9 +13,9 @@ export async function getCurrentUser(req, res) {
 
 
 export async function getUserRanking(req, res) {
-
     try {
-        res.send("getUserRanking")
+        const { rows: ranking } = await getRankingDB()
+        res.send(ranking)
     } catch (err) {
         res.stats(500).send(err.message)
     }
