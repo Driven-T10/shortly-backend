@@ -9,7 +9,7 @@ export function getCompleteUserDB(userId) {
         SELECT users.id, users.name, SUM(urls."visitCount") AS "visitCount", 
                 JSON_AGG(
                     JSON_BUILD_OBJECT('id', urls.id, 'url', urls.url, 'shortUrl', urls."shortUrl", 'visitCount', urls."visitCount")
-                ) AS "shortenedUrl"
+                ) AS "shortenedUrls"
             FROM users 
             JOIN urls ON users.id = urls."userId"
             WHERE users.id=$1

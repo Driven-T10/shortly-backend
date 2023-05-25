@@ -26,7 +26,7 @@ export async function signIn(req, res) {
         const user = await getUserByEmailDB(email)
         if (user.rowCount === 0) return res.status(401).send({ message: "E-mail não cadastrado!" })
 
-        const isPasswordCorrect = bcrypt.compare(password, user.rows[0].password)
+        const isPasswordCorrect = bcrypt.compareSync(password, user.rows[0].password)
         if (!isPasswordCorrect) return res.status(401).send({ message: "Senha incorreta!" })
 
         const token = uuid()
